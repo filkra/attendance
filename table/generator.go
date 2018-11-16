@@ -3,16 +3,16 @@ package table
 import (
 	"fmt"
 	"github.com/jung-kurt/gofpdf"
+	"sort"
 )
 
 const (
 	tableHeaderName = "Name"
 	tableHeaderSignature = "Unterschrift"
 
-	columnWidthName = 55.0
-	columnWidthSignature = 130.0
+	columnWidthName = 95.0
+	columnWidthSignature = 95.0
 	columnHeight = 9.0
-	lineHeight = 7.0
 
 	defaultFont = "Times"
 	defaultFontSize = 16.0
@@ -41,10 +41,13 @@ func table(pdf *gofpdf.Fpdf, students []string) *gofpdf.Fpdf {
 	pdf.SetFont(defaultFont, "", defaultFontSize)
 	translator := pdf.UnicodeTranslatorFromDescriptor("")
 
+	// Sort student names in ascending order
+	sort.Strings(students)
+
 	// Print row for each student
 	for _, student := range students {
 		xBefore, yBefore := pdf.GetXY()
-		pdf.MultiCell(columnWidthName, lineHeight, translator(student), defaultBorderWidth, defaultAlignment, false)
+		pdf.MultiCell(columnWidthName, columnHeight, translator(student), defaultBorderWidth, defaultAlignment, false)
 		yAfter := pdf.GetY()
 		pdf.MoveTo(xBefore + columnWidthName, yBefore)
 		pdf.MultiCell(columnWidthSignature, yAfter - yBefore, "", defaultBorderWidth, defaultAlignment, false)
