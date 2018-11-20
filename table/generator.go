@@ -23,6 +23,9 @@ const (
 	defaultBorderWidth = "1"
 
 	pageTitle = "Gruppe %s - Termin %d"
+
+	defaultNote = "Teilnahme ausschließlich mit Anmeldung"
+	defaultNoteFontSize = 20.0
 )
 
 func nextLine(pdf *gofpdf.Fpdf) {
@@ -56,6 +59,13 @@ func table(pdf *gofpdf.Fpdf, students []string) *gofpdf.Fpdf {
 	return pdf
 }
 
+func note(pdf *gofpdf.Fpdf) *gofpdf.Fpdf {
+	translator := pdf.UnicodeTranslatorFromDescriptor("")
+	pdf.SetFont(defaultFont, "BU", defaultNoteFontSize)
+	pdf.CellFormat(pdf.GetLineWidth() * 1000, 16, translator(defaultNote), "", 0, defaultAlignment, false, 0, "")
+	return pdf
+}
+
 func Generate(appointment int, group string, students []string) *gofpdf.Fpdf  {
 	pdf := gofpdf.New(defaultOrientation, defaultUnit, defaultPaperSize, "")
 	pdf.AddPage()
@@ -70,6 +80,10 @@ func Generate(appointment int, group string, students []string) *gofpdf.Fpdf  {
 
 	// Generate table content
 	pdf = table(pdf, students)
+
+	nextLine(pdf)
+
+	pdf = note(pdf)
 
 	return pdf
 }
