@@ -22,7 +22,7 @@ const (
 	defaultAlignment = "C"
 	defaultBorderWidth = "1"
 
-	pageTitle = "Gruppe %s - Termin %d"
+	pageTitle = "Gruppe %s - Übung %d"
 
 	defaultNote = "Teilnahme ausschließlich mit Anmeldung"
 	defaultNoteFontSize = 20.0
@@ -72,7 +72,8 @@ func Generate(appointment int, group string, students []string) *gofpdf.Fpdf  {
 	pdf.SetFont(defaultFont, "B", defaultFontSize)
 
 	// Generate page title
-	pdf.CellFormat(pdf.GetLineWidth() * 1000, 16, fmt.Sprintf(pageTitle, group, appointment), "", 0, defaultAlignment, false, 0, "")
+	translator := pdf.UnicodeTranslatorFromDescriptor("")
+	pdf.CellFormat(pdf.GetLineWidth() * 1000, 16, translator(fmt.Sprintf(pageTitle, group, appointment)), "", 0, defaultAlignment, false, 0, "")
 	nextLine(pdf)
 
 	// Generate table header
